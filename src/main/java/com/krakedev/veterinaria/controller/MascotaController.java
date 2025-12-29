@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.krakedev.veterinaria.entity.Mascota;
+
+import jakarta.websocket.server.PathParam;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("api/mascotas")
@@ -28,4 +35,14 @@ public class MascotaController {
         Optional<Mascota> mascotaObtenida = mascotas.stream().filter(m -> m.getId() == id).findFirst();
         return mascotaObtenida.orElse(null);
     }
+    @PostMapping("/crear")
+    public Mascota crearMascota(@RequestBody Mascota mascota) {
+        mascotas.add(mascota);
+        return mascota;
+    }
+    @DeleteMapping("/{id}")
+    public void eliminarMascota(@PathVariable int id){
+        mascotas.removeIf(m -> m.getId() == id);
+    }
+    
 }
