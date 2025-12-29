@@ -1,9 +1,12 @@
 package com.krakedev.veterinaria.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.type.descriptor.java.LocalDateJavaType;
+import org.springframework.cglib.core.Local;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,8 +26,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class MascotaController {
     private List<Mascota> mascotas = new ArrayList<>();
     public MascotaController(){
-        mascotas.add(new Mascota(1,"PEpe","Golden Retriever", 2, "Albert"));
-        mascotas.add(new Mascota(2,"Jose","Husky", 1, "Adrian"));
+        mascotas.add(new Mascota(1,"PEpe","Golden Retriever", 2, "Albert", LocalDate.now()));
+        mascotas.add(new Mascota(2,"Jose","Husky", 1, "Adrian", LocalDate.now()));
     }
     @GetMapping
     public List<Mascota> listarMascotas(){
