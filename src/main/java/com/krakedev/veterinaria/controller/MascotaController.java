@@ -26,15 +26,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class MascotaController {
     private List<Mascota> mascotas = new ArrayList<>();
     public MascotaController(){
-        mascotas.add(new Mascota(1,"PEpe","Golden Retriever", 2, "Albert", LocalDate.now()));
-        mascotas.add(new Mascota(2,"Jose","Husky", 1, "Adrian", LocalDate.now()));
+        mascotas.add(new Mascota(1L,"PEpe","Golden Retriever", 2, "Albert", LocalDate.now()));
+        mascotas.add(new Mascota(2L,"Jose","Husky", 1, "Adrian", LocalDate.now()));
     }
     @GetMapping
     public List<Mascota> listarMascotas(){
         return mascotas;
     }
     @GetMapping("/{id}")
-    public Mascota obtenerMascotaPorID(@PathVariable int id){
+    public Mascota obtenerMascotaPorID(@PathVariable Long id){
         Optional<Mascota> mascotaObtenida = mascotas.stream().filter(m -> m.getId() == id).findFirst();
         return mascotaObtenida.orElse(null);
     }
