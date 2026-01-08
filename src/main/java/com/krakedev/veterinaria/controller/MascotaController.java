@@ -43,17 +43,25 @@ public class MascotaController {
     @GetMapping
     public List<Mascota> listarMascotas(){
         return mascotas;
-    }
-    @GetMapping("/{id}")
-    public Mascota obtenerMascotaPorID(@PathVariable Long id){
-        Optional<Mascota> mascotaObtenida = mascotas.stream().filter(m -> m.getId() == id).findFirst();
-        return mascotaObtenida.orElse(null);
     }*/
     @PostMapping("/crear")
     public ResponseEntity<?> crearMascota(@RequestBody Mascota mascota) {
         Mascota nuevaMascota = mascotaService.registrarMascota(mascota);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevaMascota);
-    }/* 
+    }
+    @GetMapping("/buscar/nombre/{nombre}")
+    public ResponseEntity<?> buscarPorNombre(@PathVariable String nombre){
+        Optional<Mascota> mascotaExistente = mascotaService.buscarPorNombre(nombre);
+        return mascotaExistente.isPresent() ? ResponseEntity.ok(mascotaExistente.get()) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mascota no encontrada");
+    }
+    
+    @GetMapping("/buscar/id/{id}")
+    public ResponseEntity<?> buscarPorId(@PathVariable Long id){
+        Optional<Mascota> mascotaExistente = mascotaService.buscarPorId(id);
+        return mascotaExistente.isPresent() ? ResponseEntity.ok(mascotaExistente.get()) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mascota no encontrada");
+    }
+
+    /* 
     @DeleteMapping("/{id}")
     public void eliminarMascota(@PathVariable int id){
         mascotas.removeIf(m -> m.getId() == id);    
