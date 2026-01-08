@@ -9,6 +9,7 @@ import org.apache.catalina.connector.Response;
 import org.hibernate.type.descriptor.java.LocalDateJavaType;
 import org.springframework.cglib.core.Local;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -26,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 
 
@@ -39,11 +42,7 @@ public class MascotaController {
     public ResponseEntity<List<Mascota>> listarMascota(){
         List<Mascota> mascotas = mascotaService.listarMascotas();
         return ResponseEntity.ok(mascotas);
-    }/*
-    @GetMapping
-    public List<Mascota> listarMascotas(){
-        return mascotas;
-    }*/
+    }
     @PostMapping("/crear")
     public ResponseEntity<?> crearMascota(@RequestBody Mascota mascota) {
         Mascota nuevaMascota = mascotaService.registrarMascota(mascota);
@@ -61,10 +60,31 @@ public class MascotaController {
         return mascotaExistente.isPresent() ? ResponseEntity.ok(mascotaExistente.get()) : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Mascota no encontrada");
     }
 
-    /* 
-    @DeleteMapping("/{id}")
-    public void eliminarMascota(@PathVariable int id){
-        mascotas.removeIf(m -> m.getId() == id);    
-    }*/
+    @PutMapping("/actualizar/{id}")
+    public ResponseEntity<?> actualizarMascota(@PathVariable Long id, @RequestBody Mascota mascota) {
+        Mascota mascotaActualizada = new Mascota();
+        try {
+            mascotaActualizada.setEdad(mascota.getEdad());
+            mascotaActualizada.setEspecie(mascota.getEspecie());
+            mascotaActualizada.setFechaRegistro(mascota.getFechaRegistro());
+            mascotaActualizada.setNombre(mascota.getNombre());
+            mascotaActualizada.setNombreDueno(mascota.getNombreDueno());
+
+            Mascota mascotaBBDD = mascotaService.actualizarMascota(id, mascotaActualizada);
+            return ResponseEntity.ok(mascotaBBDD);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/eliminar/{id}")
+    public ResponseEntity<?> eliminarMascotaPorId(@PathVariable Long id){
+        try{
+            mascotaService.eliminarMascota(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
     
 }
